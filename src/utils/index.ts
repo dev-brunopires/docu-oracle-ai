@@ -1,6 +1,6 @@
 export function createPageUrl(pageName: string): string {
   const routes: Record<string, string> = {
-    'Chat': '/',
+    'Chat': '/chat',
     'Procedures': '/procedures',
     'Users': '/users'
   };

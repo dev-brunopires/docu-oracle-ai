@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function Auth() {
@@ -16,7 +15,7 @@ export default function Auth() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  React.useEffect(() => {
+  useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         navigate('/');
@@ -44,10 +43,10 @@ export default function Auth() {
         });
 
         if (error) throw error;
-        
+
         toast({
-          title: "Login realizado!",
-          description: "Bem-vindo de volta.",
+          title: 'Login realizado com sucesso!',
+          description: 'Bem-vindo de volta.',
         });
       } else {
         const { error } = await supabase.auth.signUp({
@@ -57,23 +56,22 @@ export default function Auth() {
             data: {
               full_name: fullName,
             },
-            emailRedirectTo: `${window.location.origin}/`,
           },
         });
 
         if (error) throw error;
 
         toast({
-          title: "Cadastro realizado!",
-          description: "Você pode fazer login agora.",
+          title: 'Cadastro realizado com sucesso!',
+          description: 'Você já pode fazer login.',
         });
         setIsLogin(true);
       }
     } catch (error: any) {
       toast({
-        title: "Erro",
+        title: 'Erro',
         description: error.message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -82,13 +80,12 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-emerald-50 p-4">
-      <Card className="w-full max-w-md p-8 bg-white/80 backdrop-blur-xl border-slate-200 shadow-xl">
+      <Card className="w-full max-w-md p-8">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-emerald-600 rounded-2xl mb-4 shadow-lg">
-            <Sparkles className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Oráculo</h1>
-          <p className="text-slate-600">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent mb-2">
+            Oráculo
+          </h1>
+          <p className="text-muted-foreground">
             {isLogin ? 'Entre na sua conta' : 'Crie sua conta'}
           </p>
         </div>
@@ -96,78 +93,60 @@ export default function Auth() {
         <form onSubmit={handleAuth} className="space-y-4">
           {!isLogin && (
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Nome Completo
-              </label>
               <Input
                 type="text"
+                placeholder="Nome completo"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                required
-                className="w-full"
-                placeholder="Seu nome"
+                required={!isLogin}
               />
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              Email
-            </label>
             <Input
               type="email"
+              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full"
-              placeholder="seu@email.com"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              Senha
-            </label>
             <Input
               type="password"
+              placeholder="Senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength={6}
-              className="w-full"
-              placeholder="••••••"
             />
           </div>
 
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700"
-          >
-            {loading ? 'Processando...' : isLogin ? 'Entrar' : 'Cadastrar'}
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? 'Carregando...' : isLogin ? 'Entrar' : 'Cadastrar'}
           </Button>
         </form>
 
         <div className="mt-6 text-center">
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+            className="text-sm text-muted-foreground hover:text-primary"
           >
             {isLogin
-              ? 'Não tem conta? Cadastre-se'
-              : 'Já tem conta? Entre'}
+              ? 'Não tem uma conta? Cadastre-se'
+              : 'Já tem uma conta? Entre'}
           </button>
         </div>
 
         {isLogin && (
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-sm text-blue-800 font-semibold mb-2">
-              Usuário padrão para teste:
+          <div className="mt-6 p-4 bg-muted rounded-lg">
+            <p className="text-sm text-muted-foreground text-center mb-2">
+              Credenciais de teste:
             </p>
-            <p className="text-xs text-blue-700">
-              Email: admin@oraculo.com
-              <br />
-              Senha: admin123
+            <p className="text-xs text-center">
+              <strong>Email:</strong> admin@oraculo.com<br />
+              <strong>Senha:</strong> admin123
             </p>
           </div>
         )}

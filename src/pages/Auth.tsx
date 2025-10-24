@@ -79,10 +79,19 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-emerald-50 p-4">
-      <Card className="w-full max-w-md p-8">
+    <div className="min-h-screen flex items-center justify-center gradient-dark p-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-20 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-glow" />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-glow" style={{ animationDelay: '1s' }} />
+      </div>
+
+      <Card className="w-full max-w-md p-8 glass border-primary/20 shadow-glow relative z-10 animate-scale-in">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent mb-2">
+          <div className="inline-flex items-center justify-center w-16 h-16 gradient-primary rounded-2xl mb-4 shadow-glow">
+            <span className="text-3xl font-bold text-primary-foreground">O</span>
+          </div>
+          <h1 className="text-4xl font-bold gradient-primary bg-clip-text text-transparent mb-2">
             Oráculo
           </h1>
           <p className="text-muted-foreground">
@@ -92,13 +101,14 @@ export default function Auth() {
 
         <form onSubmit={handleAuth} className="space-y-4">
           {!isLogin && (
-            <div>
+            <div className="animate-fade-in">
               <Input
                 type="text"
                 placeholder="Nome completo"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required={!isLogin}
+                className="bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary"
               />
             </div>
           )}
@@ -110,6 +120,7 @@ export default function Auth() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary"
             />
           </div>
 
@@ -120,10 +131,15 @@ export default function Auth() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary"
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button 
+            type="submit" 
+            className="w-full gradient-primary hover:opacity-90 transition-all shadow-glow" 
+            disabled={loading}
+          >
             {loading ? 'Carregando...' : isLogin ? 'Entrar' : 'Cadastrar'}
           </Button>
         </form>
@@ -131,7 +147,7 @@ export default function Auth() {
         <div className="mt-6 text-center">
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className="text-sm text-muted-foreground hover:text-primary"
+            className="text-sm text-muted-foreground hover:text-primary transition-colors"
           >
             {isLogin
               ? 'Não tem uma conta? Cadastre-se'
@@ -140,11 +156,11 @@ export default function Auth() {
         </div>
 
         {isLogin && (
-          <div className="mt-6 p-4 bg-muted rounded-lg">
-            <p className="text-sm text-muted-foreground text-center mb-2">
+          <div className="mt-6 p-4 glass rounded-lg border border-primary/20 animate-fade-in">
+            <p className="text-sm text-muted-foreground text-center mb-2 font-medium">
               Credenciais de teste:
             </p>
-            <p className="text-xs text-center">
+            <p className="text-xs text-center text-foreground/80">
               <strong>Email:</strong> admin@oraculo.com<br />
               <strong>Senha:</strong> admin123
             </p>

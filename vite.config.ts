@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig(({ mode }) => ({
   server: {
@@ -9,6 +10,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
+    tailwindcss(),
     react(),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
